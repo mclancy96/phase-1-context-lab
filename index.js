@@ -1,58 +1,58 @@
 function createEmployeeRecord(employeeInfo) {
-	return {
-		firstName: employeeInfo[0],
-		familyName: employeeInfo[1],
-		title: employeeInfo[2],
-		payPerHour: employeeInfo[3],
-		timeInEvents: [],
-		timeOutEvents: []
-	}
+  return {
+    firstName: employeeInfo[0],
+    familyName: employeeInfo[1],
+    title: employeeInfo[2],
+    payPerHour: employeeInfo[3],
+    timeInEvents: [],
+    timeOutEvents: []
+  }
 }
 
 function createEmployeeRecords(employeeInfoArray) {
-	return employeeInfoArray.map(employeeInfo => createEmployeeRecord(employeeInfo))
+  return employeeInfoArray.map(employeeInfo => createEmployeeRecord(employeeInfo))
 }
 
 function createTimeInEvent(timePunch) {
-	this.timeInEvents.push(parseTimePunch(timePunch, "TimeIn"))
-	return this
+  this.timeInEvents.push(parseTimePunch(timePunch, "TimeIn"))
+  return this
 }
 
 function createTimeOutEvent(timePunch) {
-	this.timeOutEvents.push(parseTimePunch(timePunch, "TimeOut"))
-	return this
+  this.timeOutEvents.push(parseTimePunch(timePunch, "TimeOut"))
+  return this
 }
 
 function parseTimePunch(timePunchString, type) {
-	const timePunchFormat = /^\d{4}-\d{2}-\d{2} \d{4}$/;
-	if (!timePunchFormat.test(timePunchString)) {
-		throw new Error("Time punch format must be 'YYYY-MM-DD HHMM'");
-	}
-	return {
-		type: type,
-		hour: Number.parseInt(timePunchString.split(' ')[1]),
-		date: timePunchString.split(' ')[0]
-	}
+  const timePunchFormat = /^\d{4}-\d{2}-\d{2} \d{4}$/;
+  if (!timePunchFormat.test(timePunchString)) {
+    throw new Error("Time punch format must be 'YYYY-MM-DD HHMM'");
+  }
+  return {
+    type: type,
+    hour: Number.parseInt(timePunchString.split(' ')[1]),
+    date: timePunchString.split(' ')[0]
+  }
 }
 
 function getDuration(timeInTime, timeOutTime) {
-	const timeInHour = Math.floor(timeInTime / 100);
-	const timeInMinutes = Number.parseInt(timeInTime.toString().slice(-2)) / 60;
-	const timeOutHour = Math.floor(timeOutTime / 100);
-	const timeOutMinutes = Number.parseInt(timeOutTime.toString().slice(-2)) / 60;
-	return (timeOutHour + timeOutMinutes) - (timeInHour + timeInMinutes)
+  const timeInHour = Math.floor(timeInTime / 100);
+  const timeInMinutes = Number.parseInt(timeInTime.toString().slice(-2)) / 60;
+  const timeOutHour = Math.floor(timeOutTime / 100);
+  const timeOutMinutes = Number.parseInt(timeOutTime.toString().slice(-2)) / 60;
+  return (timeOutHour + timeOutMinutes) - (timeInHour + timeInMinutes)
 }
 function hoursWorkedOnDate(dateWorked) {
-	const timeInTime = this.timeInEvents.find(event => event.date === dateWorked).hour;
-	const timeOutTime = this.timeOutEvents.find(event => event.date === dateWorked).hour;
-	if (!timeInTime || !timeOutTime) throw new Error("Missing punch detected");
-	return getDuration(timeInTime, timeOutTime)
+  const timeInTime = this.timeInEvents.find(event => event.date === dateWorked).hour;
+  const timeOutTime = this.timeOutEvents.find(event => event.date === dateWorked).hour;
+  if (!timeInTime || !timeOutTime) throw new Error("Missing punch detected");
+  return getDuration(timeInTime, timeOutTime)
 }
 
 function wagesEarnedOnDate(dateWorked) { return this.payPerHour * hoursWorkedOnDate.call(this, dateWorked) }
 
 function findEmployeeByFirstName(collection, firstNameString) {
-	return collection.find(record => record.firstName === firstNameString)
+  return collection.find(record => record.firstName === firstNameString)
 }
 
 /*
@@ -65,15 +65,15 @@ function findEmployeeByFirstName(collection, firstNameString) {
  */
 
 const allWagesFor = function () {
-	const eligibleDates = this.timeInEvents.map(function (e) {
-		return e.date
-	})
+  const eligibleDates = this.timeInEvents.map(function (e) {
+    return e.date
+  })
 
-	const payable = eligibleDates.reduce(function (memo, d) {
-		return memo + wagesEarnedOnDate.call(this, d)
-	}.bind(this), 0) // <== Hm, why did we need to add bind() there? We'll discuss soon!
+  const payable = eligibleDates.reduce(function (memo, d) {
+    return memo + wagesEarnedOnDate.call(this, d)
+  }.bind(this), 0) // <== Hm, why did we need to add bind() there? We'll discuss soon!
 
-	return payable
+  return payable
 }
 
 
