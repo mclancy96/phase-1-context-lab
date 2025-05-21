@@ -40,7 +40,6 @@ function getDuration(timeInTime, timeOutTime) {
 	const timeInMinutes = Number.parseInt(timeInTime.toString().slice(-2)) / 60;
 	const timeOutHour = Math.floor(timeOutTime / 100);
 	const timeOutMinutes = Number.parseInt(timeOutTime.toString().slice(-2)) / 60;
-	debugger
 	return (timeOutHour + timeOutMinutes) - (timeInHour + timeInMinutes)
 }
 function hoursWorkedOnDate(dateWorked) {
