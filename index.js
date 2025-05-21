@@ -56,7 +56,6 @@ function findEmployeeByFirstName(collection, firstNameString) {
 	return collection.find(record => record.firstName === firstNameString)
 }
 
-
 /*
  We're giving you this function. Take a look at it, you might see some usage
  that's new and different. That's because we're avoiding a well-known, but
@@ -79,4 +78,4 @@ const allWagesFor = function () {
 }
 
 
-function calculatePayroll() { return this.reduce((total, record) => total + allWagesFor(record), 0) }
+function calculatePayroll(employeeRecords) { return employeeRecords.reduce((total, record) => total + allWagesFor.call(record), 0) }
